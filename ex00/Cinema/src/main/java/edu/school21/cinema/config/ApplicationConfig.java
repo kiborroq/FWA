@@ -23,8 +23,8 @@ public class ApplicationConfig {
 	public JdbcTemplate jdbcTemplate() throws IOException {
 		JdbcTemplate template = new JdbcTemplate(dataSource());
 
-		String schema = new String(Files.readAllBytes(Paths.get("src/main/resources/sql/schema.sql")), StandardCharsets.UTF_8);;
-		String data = new String(Files.readAllBytes(Paths.get("src/main/resources/sql/data.sql")), StandardCharsets.UTF_8);;
+		String schema = new String(Files.readAllBytes(Paths.get("src/main/resources/sql/schema.sql")), StandardCharsets.UTF_8);
+		String data = new String(Files.readAllBytes(Paths.get("src/main/resources/sql/data.sql")), StandardCharsets.UTF_8);
 		template.execute(schema);
 		template.execute(data);
 
