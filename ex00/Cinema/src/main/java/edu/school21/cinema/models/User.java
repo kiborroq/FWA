@@ -8,6 +8,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class User {
+	public static final Integer NAME_LENGTH = 127;
+	public static final Integer EMAIL_LENGTH = 320;
+
 	private Long id;
 	private String lastName;
 	private String firstName;

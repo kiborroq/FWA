@@ -26,6 +26,7 @@
 
   .field {
     margin-bottom: 20px;
+    height: 80px;
   }
 
   input[type=text]:focus, input[type=password]:focus {
@@ -55,7 +56,7 @@
   }
 
   .error {
-    margin: 0;
+    margin: 2px 0 0;
     font-size: 10pt;
     color: #c41515;
   }
