@@ -1,4 +1,15 @@
+<%@ page import="edu.school21.cinema.listeners.ActiveSessionListener" %>
+<%@ page import="java.time.LocalDateTime" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="edu.school21.cinema.models.User" %>
+<%@ page import="java.time.Instant" %>
+<%@ page import="java.time.ZoneId" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<% User user = (User) request.getSession().getAttribute("user"); %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -118,9 +129,9 @@
                 <p class="label">Last name</p>
             </div>
             <div class="info-value">
-                <p class="value">kiborroq@school21.ru</p>
-                <p class="value">Kieth</p>
-                <p class="value">Borrok</p>
+                <p class="value"><%= user.getEmail() %></p>
+                <p class="value"><%= user.getFirstName() %></p>
+                <p class="value"><%= user.getLastName() %></p>
             </div>
         </div>
     </div>
@@ -132,11 +143,13 @@
                 <th>Time</th>
                 <th>IP</th>
             </tr>
-            <tr>
-                <td>December 10, 2020</td>
-                <td>05:00</td>
-                <td>127.0.0.1</td>
-            </tr>
+            <c:forEach var="s" items="<%= ActiveSessionListener.getActiveSessions() %>">
+                <tr>
+                    <td>${s.date}</td>
+                    <td>${s.time}</td>
+                    <td>${s.ip}</td>
+                </tr>
+            </c:forEach>
         </table>
     </div>
     <div class="images-list">

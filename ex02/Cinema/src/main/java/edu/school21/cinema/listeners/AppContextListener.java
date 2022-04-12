@@ -1,4 +1,4 @@
-package edu.school21.cinema.listener;
+package edu.school21.cinema.listeners;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

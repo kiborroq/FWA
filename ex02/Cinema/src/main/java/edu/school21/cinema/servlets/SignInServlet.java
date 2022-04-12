@@ -1,7 +1,9 @@
 package edu.school21.cinema.servlets;
 
+import edu.school21.cinema.listeners.ActiveSessionListener;
 import edu.school21.cinema.models.User;
 import edu.school21.cinema.services.UserService;
+import edu.school21.cinema.util.RequestUtil;
 import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletConfig;
@@ -36,8 +38,12 @@ public class SignInServlet extends HttpServlet {
 			req.getRequestDispatcher("/signInForm").forward(req, resp);
 		} else {
 			HttpSession session = req.getSession();
+
+			session.setAttribute("ip", RequestUtil.getClientIpAddress(req));
 			session.setAttribute("user", user);
 			resp.sendRedirect(req.getContextPath() + "/profile");
+
+			ActiveSessionListener.addActiveSession(session);
 		}
 	}
 
