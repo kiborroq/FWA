@@ -11,10 +11,6 @@
 <style>
   form {width: 400px; margin: auto}
 
-  .container {
-    padding: 16px;
-  }
-
   input[type=text], input[type=password] {
     width: 100%;
     padding: 15px;
