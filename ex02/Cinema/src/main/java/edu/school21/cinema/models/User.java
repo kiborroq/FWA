@@ -16,4 +16,5 @@ public class User {
 	private String firstName;
 	private String email;
 	private String password;
+	private File avatar;
 }

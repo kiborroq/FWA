@@ -120,7 +120,12 @@
     <div class="avatar-user-info">
         <div class="avatar-info">
             <img class="avatar" src="https://www.iguides.ru/upload/medialibrary/9f8/9f8fdff471b7d281f81f694c100b5adc.png">
-            <button type="submit" class="uploadbtn" value="/cinema/sighUp">Upload</button>
+<%--            <button type="submit" class="uploadbtn" value="/cinema/sighUp">Upload</button>--%>
+            <form action="/cinema/images" method="POST" enctype="multipart/form-data">
+                <input type="file" name="fileToUpload">
+                <br/><br/>
+                <button type="submit" class="uploadbtn" value="/cinema/images">Upload</button>
+            </form>
         </div>
         <div class="user-info">
             <div class="info-key">
