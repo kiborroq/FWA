@@ -1,5 +1,6 @@
 package edu.school21.cinema.repositories;
 
+import edu.school21.cinema.models.File;
 import edu.school21.cinema.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,4 +43,5 @@ public class UserRepository {
 			return user;
 		}
 	}
+
 }
