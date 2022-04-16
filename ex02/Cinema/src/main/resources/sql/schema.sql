@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS file (
     REFERENCES user_account(id)
 );
 
-ALTER TABLE user_account
-ADD CONSTRAINT fk_avatar_id
-FOREIGN KEY (avatar_id)
-REFERENCES file(id);
+-- ALTER TABLE user_account
+-- ADD CONSTRAINT fk_avatar_id
+-- FOREIGN KEY (avatar_id)
+-- REFERENCES file(id);
 

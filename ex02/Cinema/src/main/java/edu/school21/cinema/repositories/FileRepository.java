@@ -28,7 +28,7 @@ public class FileRepository {
 
 	public void saveFile(File file) {
 		jdbcTemplate.update("INSERT INTO file (uuid, name, mime, size, user_id)  VALUES (?, ?, ?, ?, ?)",
-				file.getUuid(), file.getName(), file.getMime(), file.getSize(), file.getUser());
+				file.getUuid(), file.getName(), file.getMime(), file.getSize(), file.getUser_id());
 	}
 
 
@@ -43,7 +43,7 @@ public class FileRepository {
 			file.setSize(rs.getLong("size"));
 			file.setMime(rs.getString("mime"));
 			file.setUuid(UUID.fromString(rs.getString("uuid")));
-			//file.setUser(rs.getObject("user_id", );
+			file.setUser_id(rs.getLong("user_id"));
 			return file;
 		}
 

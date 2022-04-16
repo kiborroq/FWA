@@ -1,6 +1,7 @@
 package edu.school21.cinema.services;
 
 import edu.school21.cinema.exception.FwaRuntimeException;
+import edu.school21.cinema.listeners.ActiveSessionListener;
 import edu.school21.cinema.models.File;
 import edu.school21.cinema.models.User;
 import edu.school21.cinema.repositories.FileRepository;
@@ -44,7 +45,7 @@ public class FileService {
 		uploadedFile.setName(filePart.getName());
 		uploadedFile.setSize(filePart.getSize());
 		uploadedFile.setMime(filePart.getContentType());
-		uploadedFile.setUser(user);
+		uploadedFile.setUser_id(user.getId());
 
 		return fileToSave.toString();
 	}

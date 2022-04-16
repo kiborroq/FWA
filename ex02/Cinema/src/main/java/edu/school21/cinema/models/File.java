@@ -16,5 +16,5 @@ public class File {
 	private String name; // имя самого файла
 	private Long size; // из файла в разных загловках
 	private String mime; // тип файла
-	private User user;
+	private Long user_id; //  именно айди юзера вытаскиваем
 }
