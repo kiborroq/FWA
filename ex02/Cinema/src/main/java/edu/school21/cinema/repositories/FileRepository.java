@@ -1,67 +1,79 @@
 package edu.school21.cinema.repositories;
 
-import edu.school21.cinema.models.File;
-import edu.school21.cinema.models.User;
+import edu.school21.cinema.models.ImageFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Repository
 public class FileRepository {
 
 	@Autowired
-	private static JdbcTemplate jdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 
+	public Long saveFile(ImageFile imageFile) {
+		SimpleJdbcInsert insert = new SimpleJdbcInsert(jdbcTemplate);
+		insert.withTableName("file");
+		insert.usingGeneratedKeyColumns("id");
 
-	public static User findUserByEmail2(String email) {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("name", imageFile.getName());
+		parameters.put("mime", imageFile.getMime());
+		parameters.put("size", imageFile.getSize());
+		parameters.put("user_id", imageFile.getUserId());
+		parameters.put("uuid", imageFile.getUuid());
+
+		return (Long) insert.executeAndReturnKey(parameters);
+//		jdbcTemplate.update("INSERT INTO file (name, mime, size, user_id)  VALUES (?, ?, ?, ?)",
+//				imageFile.getName(), imageFile.getMime(), imageFile.getSize(), imageFile.getUserId());
+	}
+
+	public ImageFile findFileById(Long id) {
 		try {
-			return jdbcTemplate.queryForObject("SELECT * FROM user_account WHERE email = ?", new FileMapper.UserMapper(), email);
+			return jdbcTemplate.queryForObject("SELECT * FROM file WHERE id = ?", new FileMapper(), id);
 		} catch (Exception e) {
 			return null;
 		}
 	}
 
-	public void saveFile(File file) {
-		jdbcTemplate.update("INSERT INTO file (uuid, name, mime, size, user_id)  VALUES (?, ?, ?, ?, ?)",
-				file.getUuid(), file.getName(), file.getMime(), file.getSize(), file.getUser_id());
-	}
-
-
-	private static class FileMapper implements RowMapper<File> {
-
-
-		@Override
-		public File mapRow(ResultSet rs, int rowNum) throws SQLException {
-			File file = new File();
-			file.setId(rs.getLong(("id")));
-			file.setName(rs.getString("name"));
-			file.setSize(rs.getLong("size"));
-			file.setMime(rs.getString("mime"));
-			file.setUuid(UUID.fromString(rs.getString("uuid")));
-			file.setUser_id(rs.getLong("user_id"));
-			return file;
-		}
-
-	private static class UserMapper implements RowMapper<User> {
-
-		@Override
-		public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-			User user = new User();
-			user.setId(rs.getLong("id"));
-			user.setEmail(rs.getString("email"));
-			user.setFirstName(rs.getString("first_name"));
-			user.setLastName(rs.getString("last_name"));
-			user.setPassword(rs.getString("password"));
-
-			return user;
+	public List<ImageFile> findAllByUserId(Long userId) {
+		try {
+			return jdbcTemplate.query("SELECT * FROM file WHERE user_id = ?", new FileMapper(), userId);
+		} catch (Exception e) {
+			return new ArrayList<>();
 		}
 	}
 
+	public ImageFile findFileByUuid(UUID uuid) {
+		try {
+			return jdbcTemplate.queryForObject("SELECT * FROM file WHERE uuid = ?", new FileMapper(), uuid);
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
+	private static class FileMapper implements RowMapper<ImageFile> {
+
+		@Override
+		public ImageFile mapRow(ResultSet rs, int rowNum) throws SQLException {
+			ImageFile imageFile = new ImageFile();
+			imageFile.setId(rs.getLong(("id")));
+			imageFile.setName(rs.getString("name"));
+			imageFile.setSize(rs.getLong("size"));
+			imageFile.setMime(rs.getString("mime"));
+			imageFile.setUserId(rs.getLong("user_id"));
+			imageFile.setUuid(UUID.fromString(rs.getString("uuid")));
+			return imageFile;
+		}
 	}
 }

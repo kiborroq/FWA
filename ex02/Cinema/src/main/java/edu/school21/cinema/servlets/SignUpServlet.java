@@ -42,6 +42,7 @@ public class SignUpServlet extends HttpServlet {
 				fields.put("email", params.get("email")[0]);
 			}
 
+			resp.setStatus(e.getStatusCode());
 			req.setAttribute("fields", fields);
 			req.setAttribute("errors", errors);
 			req.getRequestDispatcher("/signUpForm").forward(req, resp);

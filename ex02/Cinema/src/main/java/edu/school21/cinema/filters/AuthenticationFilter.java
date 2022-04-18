@@ -1,7 +1,7 @@
 package edu.school21.cinema.filters;
 
-import edu.school21.cinema.exception.FwaRuntimeException;
 import org.apache.commons.io.IOUtils;
+import org.springframework.util.MimeTypeUtils;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -31,7 +31,7 @@ public class AuthenticationFilter implements Filter {
 			chain.doFilter(req, res);
 		} else {
 			res.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			res.setContentType("text/html");
+			res.setContentType(MimeTypeUtils.TEXT_HTML_VALUE);
 			IOUtils.copy(new FileReader("src/main/webapp/WEB-INF/html/Forbidden.html"), res.getWriter());
 		}
 	}
