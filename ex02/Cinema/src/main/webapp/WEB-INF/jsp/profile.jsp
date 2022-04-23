@@ -1,9 +1,7 @@
 <%@ page import="edu.school21.cinema.models.User" %>
 <%@ page import="java.util.List" %>
 <%@ page import="edu.school21.cinema.models.ImageFile" %>
-<%@ page import="edu.school21.cinema.models.UserSession" %>
 <%@ page import="edu.school21.cinema.services.SessionService" %>
-<%@ page import="java.time.LocalDateTime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <% User user = (User) request.getSession().getAttribute("user"); %>
@@ -15,9 +13,16 @@
     function triggerInput() {
         document.getElementById('inputFile').click();
     }
+
+    function inputImage(event) {
+        if (event.target.files[0]) {
+            document.getElementById('image').src=URL.createObjectURL(event.target.files[0]);
+            document.getElementById("add-icon").style.display = "none";
+            document.getElementById("uploadbtn").disabled = false;
+        }
+    }
 </script>
 <head>
-
     <title>Profile</title>
 </head>
 <style>
@@ -27,12 +32,12 @@
     }
 
     .container {
-        margin: auto;
         padding: 15px;
         width: 700px;
         height: 100%;
         display: flex;
         flex-direction: column;
+        margin: auto auto 50px;
     }
 
     .avatar-user-info {
@@ -77,15 +82,26 @@
         cursor: pointer;
     }
 
-    .avatar {
+    .image-preview {
         height:175px;
-        width: 198px;
+        width: 194px;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px dashed #5237d5;
-        border-radius: 5px;
+        border: 2px dashed #5237d5;
+        border-radius: 10px;
+    }
+
+    .image {
+        max-width: 194px;
+        max-height: 175px;
+        border-radius: inherit;
+    }
+
+    .add-icon {
+        font-size: 40pt;
+        color: #5237d5;
     }
 
     .info-key {
@@ -96,6 +112,14 @@
     .label {
         color: #a4a4a4;
         margin: 2px;
+        font-size: 13pt;
+    }
+
+    .table-label {
+        color: #5237d5;
+        margin: 2px;
+        font-size: 13pt;
+        text-align: left;
     }
 
     .value {
@@ -105,19 +129,27 @@
     .sessions-list {
         margin-top: 40px;
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
     }
 
     .images-list {
         margin-top: 30px;
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
     }
 
     table {
         font-size: 10pt;
         border-collapse: collapse;
-        width: 87%;
+    }
+
+    hr {
+        height: 2px;
+        background-color: #5237d5;
+        border: none;
+        width: 100%;
+        padding: 0;
+        margin: 0 0 15px;
     }
 
     td, th {
@@ -134,15 +166,13 @@
 <div class="container">
     <div class="avatar-user-info">
         <div class="avatar-info">
-            <img id="fileSelect" onclick="triggerInput()" class="avatar" src="
-            <%=
-                user.getAvatar() != null
-                    ? "/cinema/images/" + user.getAvatar().getUuid()
-                    : "https://www.pngitem.com/pimgs/m/421-4213053_default-avatar-icon-hd-png-download.png"
-            %>">
+            <div id="fileSelect" onclick="triggerInput()" class="image-preview">
+                <i id="add-icon" class="add-icon">+</i>
+                <img id="image" class="image" alt="" src="">
+            </div>
             <form class="upload-form" action="/cinema/images" method="POST" enctype="multipart/form-data">
-                <input id="inputFile" style="display: none" type="file" name="fileToUpload">
-                <input type="submit" class="uploadbtn" value="Upload">
+                <input id="inputFile" style="display: none" type="file" name="fileToUpload" onchange="inputImage(event)" accept="image/*">
+                <input id="uploadbtn" type="submit" class="uploadbtn" value="Upload" disabled>
             </form>
         </div>
         <div class="user-info">
@@ -159,7 +189,8 @@
         </div>
     </div>
     <div class="sessions-list">
-        <p class="label">Sessions</p>
+        <p class="table-label">Sessions</p>
+        <hr>
         <table>
             <tr>
                 <th>Date</th>
@@ -176,7 +207,8 @@
         </table>
     </div>
     <div class="images-list">
-        <p class="label">Images</p>
+        <p class="table-label">Images</p>
+        <hr>
         <table>
             <tr>
                 <th>File name</th>
