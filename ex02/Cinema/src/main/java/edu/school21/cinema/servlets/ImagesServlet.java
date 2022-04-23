@@ -4,6 +4,8 @@ import edu.school21.cinema.exception.FwaRuntimeException;
 import edu.school21.cinema.models.ImageFile;
 import edu.school21.cinema.models.User;
 import edu.school21.cinema.services.FileService;
+import edu.school21.cinema.util.PropertiesUtil;
+import edu.school21.cinema.util.Util;
 import org.apache.commons.io.IOUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.util.MimeTypeUtils;
@@ -16,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -26,6 +29,7 @@ import java.util.UUID;
 public class ImagesServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 5646812020786710363L;
+	private static final String FILE_UPLOAD_PATH = PropertiesUtil.getProperty("cinema.path.image-upload");
 
 	private FileService fileService;
 
@@ -46,8 +50,15 @@ public class ImagesServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-		UUID uuid = UUID.fromString(req.getPathInfo().split("/")[1]);
-		ImageFile imageFile = fileService.getFile(uuid);
+		ImageFile imageFile = null;
+
+		if (req.getPathInfo() != null) {
+			UUID uuid = Util.toUuid(req.getPathInfo().split("/")[0]);
+
+			if (uuid != null) {
+				imageFile = fileService.getFile(uuid);
+			}
+		}
 
 		if (imageFile == null) {
 			resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -59,7 +70,7 @@ public class ImagesServlet extends HttpServlet {
 			resp.setContentLength(imageFile.getSize().intValue());
 			resp.addHeader("Content-Disposition", String.format("filename=\"%s\"", imageFile.getName()));
 
-			try (FileInputStream fis = new FileInputStream("src/main/resources/images/" + imageFile.getUuid())) {
+			try (FileInputStream fis = new FileInputStream(FILE_UPLOAD_PATH + File.separator +imageFile.getUuid())) {
 				IOUtils.copy(fis, resp.getOutputStream());
 				resp.getOutputStream().close();
 			}

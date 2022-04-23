@@ -3,7 +3,7 @@ package edu.school21.cinema.servlets;
 import edu.school21.cinema.models.User;
 import edu.school21.cinema.services.SessionService;
 import edu.school21.cinema.services.UserService;
-import edu.school21.cinema.util.RequestUtil;
+import edu.school21.cinema.util.Util;
 import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletConfig;
@@ -47,7 +47,7 @@ public class SignInServlet extends HttpServlet {
 			HttpSession session = req.getSession();
 			session.setAttribute("user", user);
 
-			sessionService.createSession(user, RequestUtil.getClientIpAddress(req));
+			sessionService.createSession(user, Util.getClientIpAddress(req));
 
 			resp.sendRedirect(req.getContextPath() + "/profile");
 		}
