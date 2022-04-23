@@ -2,6 +2,7 @@ package edu.school21.cinema.services;
 
 import edu.school21.cinema.exception.FwaRuntimeException;
 import edu.school21.cinema.models.User;
+import edu.school21.cinema.repositories.FileRepository;
 import edu.school21.cinema.repositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +19,8 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private FileRepository fileRepository;
 	@Autowired
 	private PasswordEncoder encoder;
 
@@ -45,6 +48,10 @@ public class UserService {
 		validate(email, password);
 
 		User user = userRepository.findUserByEmail(email);
+		if (user != null && user.getAvatar() != null) {
+			user.setAvatar(fileRepository.findFileById(user.getAvatar().getId()));
+		}
+
 		return user != null && encoder.matches(password, user.getPassword()) ? user : null;
 	}
 

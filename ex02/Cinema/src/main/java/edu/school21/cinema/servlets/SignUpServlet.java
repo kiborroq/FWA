@@ -17,6 +17,8 @@ import java.util.Map;
 @WebServlet("/signUp")
 public class SignUpServlet extends HttpServlet {
 
+	private static final long serialVersionUID = 1202847501603569965L;
+
 	private UserService userService;
 
 	@Override
@@ -42,6 +44,7 @@ public class SignUpServlet extends HttpServlet {
 				fields.put("email", params.get("email")[0]);
 			}
 
+			resp.setStatus(e.getStatusCode());
 			req.setAttribute("fields", fields);
 			req.setAttribute("errors", errors);
 			req.getRequestDispatcher("/signUpForm").forward(req, resp);

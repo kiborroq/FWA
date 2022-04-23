@@ -4,10 +4,14 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @ToString
-public class User {
+public class User implements Serializable {
+	private static final long serialVersionUID = -5336859537130156295L;
+
 	public static final Integer NAME_LENGTH = 127;
 	public static final Integer EMAIL_LENGTH = 320;
 
@@ -16,5 +20,5 @@ public class User {
 	private String firstName;
 	private String email;
 	private String password;
-	private File avatar;
+	private ImageFile avatar;
 }

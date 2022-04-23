@@ -10,10 +10,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 @Configuration
 @ComponentScan(basePackages = "edu.school21.cinema")
@@ -32,8 +34,19 @@ public class ApplicationConfig {
 	}
 
 	@Bean
-	public DataSource dataSource() {
-		HikariConfig config = new HikariConfig("src/main/webapp/WEB-INF/application.properties");
+	public DataSource dataSource() throws IOException {
+		Properties properties = new Properties();
+
+		try	(FileInputStream fis = new FileInputStream("src/main/webapp/WEB-INF/application.properties")) {
+			properties.load(fis);
+		}
+
+		HikariConfig config = new HikariConfig();
+		config.setJdbcUrl(properties.getProperty("jdbcUrl"));
+		config.setUsername(properties.getProperty("dataSource.user"));
+		config.setPassword(properties.getProperty("dataSource.password"));
+		config.setMaximumPoolSize(Integer.parseInt(properties.getProperty("maximumPoolSize")));
+
 		return new HikariDataSource(config);
 	}
 

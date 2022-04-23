@@ -20,7 +20,7 @@
 
 	<servlet-mapping>
 		<servlet-name>profile</servlet-name>
-		<url-pattern>/profile</url-pattern>
+		<url-pattern>/profileForm</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>signUpForm</servlet-name>

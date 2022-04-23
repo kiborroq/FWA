@@ -1,7 +1,7 @@
 package edu.school21.cinema.servlets;
 
-import edu.school21.cinema.listeners.ActiveSessionListener;
 import edu.school21.cinema.models.User;
+import edu.school21.cinema.services.SessionService;
 import edu.school21.cinema.services.UserService;
 import edu.school21.cinema.util.RequestUtil;
 import org.springframework.context.ApplicationContext;
@@ -17,10 +17,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+
 @WebServlet("/signIn")
 public class SignInServlet extends HttpServlet {
 
+	private static final long serialVersionUID = -1645768609963439573L;
+
 	private UserService userService;
+	private SessionService sessionService;
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
@@ -35,15 +40,16 @@ public class SignInServlet extends HttpServlet {
 
 			req.setAttribute("errors", errors);
 			req.setAttribute("fields", fields);
+
+			resp.setStatus(SC_BAD_REQUEST);
 			req.getRequestDispatcher("/signInForm").forward(req, resp);
 		} else {
 			HttpSession session = req.getSession();
-
-			session.setAttribute("ip", RequestUtil.getClientIpAddress(req));
 			session.setAttribute("user", user);
-			resp.sendRedirect(req.getContextPath() + "/profile");
 
-			ActiveSessionListener.addActiveSession(session);
+			sessionService.createSession(user, RequestUtil.getClientIpAddress(req));
+
+			resp.sendRedirect(req.getContextPath() + "/profile");
 		}
 	}
 
@@ -59,5 +65,6 @@ public class SignInServlet extends HttpServlet {
 		super.init(config);
 		ApplicationContext context = (ApplicationContext) config.getServletContext().getAttribute("springContext");
 		this.userService = context.getBean(UserService.class);
+		this.sessionService = context.getBean(SessionService.class);
 	}
 }

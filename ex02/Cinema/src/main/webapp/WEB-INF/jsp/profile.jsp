@@ -1,18 +1,23 @@
-<%@ page import="edu.school21.cinema.listeners.ActiveSessionListener" %>
-<%@ page import="java.time.LocalDateTime" %>
-<%@ page import="java.time.LocalDate" %>
-<%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="edu.school21.cinema.models.User" %>
-<%@ page import="java.time.Instant" %>
-<%@ page import="java.time.ZoneId" %>
 <%@ page import="java.util.List" %>
+<%@ page import="edu.school21.cinema.models.ImageFile" %>
+<%@ page import="edu.school21.cinema.models.UserSession" %>
+<%@ page import="edu.school21.cinema.services.SessionService" %>
+<%@ page import="java.time.LocalDateTime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <% User user = (User) request.getSession().getAttribute("user"); %>
+<% List<ImageFile> imageFiles = (List<ImageFile>) request.getSession().getAttribute("files"); %>
+<% List<SessionService.SessionDto> userSessions = (List<SessionService.SessionDto>) request.getSession().getAttribute("sessions"); %>
 <!DOCTYPE html>
 <html>
+<script>
+    function triggerInput() {
+        document.getElementById('inputFile').click();
+    }
+</script>
 <head>
+
     <title>Profile</title>
 </head>
 <style>
@@ -51,6 +56,10 @@
         scrollbar-width: thin;
     }
 
+    .upload-form {
+        width: 198px;
+    }
+
     .uploadbtn {
         background-color: #5237d5;
         color: white;
@@ -69,8 +78,14 @@
     }
 
     .avatar {
-        width:200px;
-        height: 175px;
+        height:175px;
+        width: 198px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px dashed #5237d5;
+        border-radius: 5px;
     }
 
     .info-key {
@@ -119,12 +134,15 @@
 <div class="container">
     <div class="avatar-user-info">
         <div class="avatar-info">
-            <img class="avatar" src="https://www.iguides.ru/upload/medialibrary/9f8/9f8fdff471b7d281f81f694c100b5adc.png">
-<%--            <button type="submit" class="uploadbtn" value="/cinema/sighUp">Upload</button>--%>
-            <form action="/cinema/images" method="POST" enctype="multipart/form-data">
-                <input type="file" name="fileToUpload">
-                <br/><br/>
-                <button type="submit" class="uploadbtn" value="/cinema/images">Upload</button>
+            <img id="fileSelect" onclick="triggerInput()" class="avatar" src="
+            <%=
+                user.getAvatar() != null
+                    ? "/cinema/images/" + user.getAvatar().getUuid()
+                    : "https://www.pngitem.com/pimgs/m/421-4213053_default-avatar-icon-hd-png-download.png"
+            %>">
+            <form class="upload-form" action="/cinema/images" method="POST" enctype="multipart/form-data">
+                <input id="inputFile" style="display: none" type="file" name="fileToUpload">
+                <input type="submit" class="uploadbtn" value="Upload">
             </form>
         </div>
         <div class="user-info">
@@ -148,7 +166,7 @@
                 <th>Time</th>
                 <th>IP</th>
             </tr>
-            <c:forEach var="s" items="<%= ActiveSessionListener.getActiveSessions() %>">
+            <c:forEach var="s" items="<%= userSessions %>">
                 <tr>
                     <td>${s.date}</td>
                     <td>${s.time}</td>
@@ -165,11 +183,13 @@
                 <th>Size</th>
                 <th>MIME</th>
             </tr>
-            <tr>
-                <td><a href="https://www.iguides.ru/upload/medialibrary/9f8/9f8fdff471b7d281f81f694c100b5adc.png">avatar.jpeg</a></td>
-                <td>500KB</td>
-                <td>image/jpeg</td>
-            </tr>
+            <c:forEach var="f" items="<%= imageFiles %>">
+                <tr>
+                    <td><a href="/cinema/images/${f.uuid.toString()}">${f.name}</a></td>
+                    <td>${f.size}</td>
+                    <td>${f.mime}</td>
+                </tr>
+            </c:forEach>
         </table>
     </div>
 </div>
