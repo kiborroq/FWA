@@ -36,4 +36,8 @@ public class FwaRuntimeException extends RuntimeException {
 	public int getStatusCode() {
 		return statusCode;
 	}
+
+	public FwaRuntimeException(Throwable cause) {
+		super(cause);
+	}
 }

@@ -32,10 +32,9 @@ public class FileRepository {
 		parameters.put("size", imageFile.getSize());
 		parameters.put("user_id", imageFile.getUserId());
 		parameters.put("uuid", imageFile.getUuid());
+		parameters.put("date", imageFile.getDate());
 
 		return (Long) insert.executeAndReturnKey(parameters);
-//		jdbcTemplate.update("INSERT INTO file (name, mime, size, user_id)  VALUES (?, ?, ?, ?)",
-//				imageFile.getName(), imageFile.getMime(), imageFile.getSize(), imageFile.getUserId());
 	}
 
 	public ImageFile findFileById(Long id) {
@@ -48,7 +47,7 @@ public class FileRepository {
 
 	public List<ImageFile> findAllByUserId(Long userId) {
 		try {
-			return jdbcTemplate.query("SELECT * FROM file WHERE user_id = ?", new FileMapper(), userId);
+			return jdbcTemplate.query("SELECT * FROM file WHERE user_id = ? ORDER BY date DESC ", new FileMapper(), userId);
 		} catch (Exception e) {
 			return new ArrayList<>();
 		}
@@ -73,6 +72,8 @@ public class FileRepository {
 			imageFile.setMime(rs.getString("mime"));
 			imageFile.setUserId(rs.getLong("user_id"));
 			imageFile.setUuid(UUID.fromString(rs.getString("uuid")));
+			imageFile.setDate(rs.getTimestamp("date").toLocalDateTime());
+
 			return imageFile;
 		}
 	}

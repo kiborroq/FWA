@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS file (
     mime VARCHAR(255) NOT NULL,
     size BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
+    date TIMESTAMP without time zone NOT NULL ,
     PRIMARY KEY(id),
 
     CONSTRAINT fk_user_id
@@ -24,8 +25,16 @@ CREATE TABLE IF NOT EXISTS file (
     REFERENCES user_account(id)
 );
 
--- ALTER TABLE user_account
--- ADD CONSTRAINT fk_avatar_id
--- FOREIGN KEY (avatar_id)
--- REFERENCES file(id);
+CREATE TABLE IF NOT EXISTS session (
+    id BIGSERIAL NOT NULL,
+    user_id BIGINT NOT NULL,
+    ip VARCHAR(40) NOT NULL,
+    date TIMESTAMP without time zone NOT NULL ,
+    PRIMARY KEY(id),
+
+    CONSTRAINT fk_session_user_id
+    FOREIGN KEY(user_id)
+    REFERENCES user_account(id)
+);
+
 

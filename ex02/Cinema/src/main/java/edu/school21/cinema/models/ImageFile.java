@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -20,4 +21,5 @@ public class ImageFile implements Serializable {
 	private Long size;
 	private String mime;
 	private Long userId;
+	private LocalDateTime date;
 }

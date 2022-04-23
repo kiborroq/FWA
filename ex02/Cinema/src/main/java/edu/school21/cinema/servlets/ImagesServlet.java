@@ -19,13 +19,13 @@ import javax.servlet.http.HttpSession;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @WebServlet("/images/*")
 @MultipartConfig
 public class ImagesServlet extends HttpServlet {
+
+	private static final long serialVersionUID = 5646812020786710363L;
 
 	private FileService fileService;
 
@@ -35,20 +35,13 @@ public class ImagesServlet extends HttpServlet {
 		User user = (User) session.getAttribute("user");
 
 		try {
-			ImageFile imageFile = fileService.createFile(user, request.getPart("fileToUpload"));
-			List<ImageFile> imageFiles = (List<ImageFile>) session.getAttribute("files");
-			if (imageFiles == null) {
-				imageFiles = new ArrayList<>();
-			}
-			imageFiles.add(imageFile);
-
-			session.setAttribute("files", imageFiles);
+			fileService.createFile(user, request.getPart("fileToUpload"));
 		} catch (FwaRuntimeException e) {
 			response.setStatus(e.getStatusCode());
 			request.setAttribute("errors", e.getErrors());
 		}
 
-		request.getRequestDispatcher("/profileForm").forward(request, response);
+		response.sendRedirect(request.getContextPath() + "/profile");
 	}
 
 	@Override
@@ -64,7 +57,7 @@ public class ImagesServlet extends HttpServlet {
 			resp.setStatus(HttpServletResponse.SC_OK);
 			resp.setContentType(MimeTypeUtils.IMAGE_JPEG_VALUE);
 			resp.setContentLength(imageFile.getSize().intValue());
-			resp.addHeader("Content-Disposition", String.format("attachment; filename=\"%s\"", imageFile.getName()));
+			resp.addHeader("Content-Disposition", String.format("filename=\"%s\"", imageFile.getName()));
 
 			try (FileInputStream fis = new FileInputStream("src/main/resources/images/" + imageFile.getUuid())) {
 				IOUtils.copy(fis, resp.getOutputStream());

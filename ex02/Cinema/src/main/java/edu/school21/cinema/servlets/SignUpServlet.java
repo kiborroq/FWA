@@ -17,6 +17,8 @@ import java.util.Map;
 @WebServlet("/signUp")
 public class SignUpServlet extends HttpServlet {
 
+	private static final long serialVersionUID = 1202847501603569965L;
+
 	private UserService userService;
 
 	@Override

@@ -14,8 +14,12 @@ import org.springframework.util.MimeTypeUtils;
 
 import javax.servlet.http.Part;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
 
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
@@ -30,7 +34,15 @@ public class FileService {
 	private final static File UPLOAD_DIR;
 
 	static {
-		UPLOAD_DIR = new File("src/main/resources/images/");
+		Properties properties = new Properties();
+
+		try	(FileInputStream fis = new FileInputStream("src/main/webapp/WEB-INF/application.properties")) {
+			properties.load(fis);
+		} catch (IOException e) {
+			throw new FwaRuntimeException(e);
+		}
+
+		UPLOAD_DIR = new File(properties.getProperty("cinema.path.image-upload"));
 		if (!UPLOAD_DIR.exists()) {
 			UPLOAD_DIR.mkdirs();
 		}
@@ -50,6 +62,7 @@ public class FileService {
 		uploadedImageFile.setSize(filePart.getSize());
 		uploadedImageFile.setMime(filePart.getContentType());
 		uploadedImageFile.setUserId(user.getId());
+		uploadedImageFile.setDate(LocalDateTime.now());
 
 		try (FileOutputStream fos = new FileOutputStream(UPLOAD_DIR.getPath() + File.separator + uploadedImageFile.getUuid())) {
 			IOUtils.copy(filePart.getInputStream(), fos);

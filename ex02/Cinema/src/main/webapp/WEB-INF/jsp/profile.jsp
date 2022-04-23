@@ -1,10 +1,14 @@
 <%@ page import="edu.school21.cinema.models.User" %>
 <%@ page import="java.util.List" %>
 <%@ page import="edu.school21.cinema.models.ImageFile" %>
+<%@ page import="edu.school21.cinema.models.UserSession" %>
+<%@ page import="edu.school21.cinema.services.SessionService" %>
+<%@ page import="java.time.LocalDateTime" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <% User user = (User) request.getSession().getAttribute("user"); %>
 <% List<ImageFile> imageFiles = (List<ImageFile>) request.getSession().getAttribute("files"); %>
+<% List<SessionService.SessionDto> userSessions = (List<SessionService.SessionDto>) request.getSession().getAttribute("sessions"); %>
 <!DOCTYPE html>
 <html>
 <script>
@@ -53,7 +57,7 @@
     }
 
     .upload-form {
-        width: 200px;
+        width: 198px;
     }
 
     .uploadbtn {
@@ -74,9 +78,14 @@
     }
 
     .avatar {
-        width:200px;
-        height: 200px;
+        height:175px;
+        width: 198px;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px dashed #5237d5;
+        border-radius: 5px;
     }
 
     .info-key {
@@ -157,13 +166,13 @@
                 <th>Time</th>
                 <th>IP</th>
             </tr>
-<%--            <c:forEach var="s" items="<%= ActiveSessionListener.getActiveSessions() %>">--%>
-<%--                <tr>--%>
-<%--                    <td>${s.date}</td>--%>
-<%--                    <td>${s.time}</td>--%>
-<%--                    <td>${s.ip}</td>--%>
-<%--                </tr>--%>
-<%--            </c:forEach>--%>
+            <c:forEach var="s" items="<%= userSessions %>">
+                <tr>
+                    <td>${s.date}</td>
+                    <td>${s.time}</td>
+                    <td>${s.ip}</td>
+                </tr>
+            </c:forEach>
         </table>
     </div>
     <div class="images-list">
