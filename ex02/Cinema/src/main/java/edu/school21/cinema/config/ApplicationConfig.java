@@ -2,6 +2,7 @@ package edu.school21.cinema.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import edu.school21.cinema.util.PropertiesUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -35,17 +36,11 @@ public class ApplicationConfig {
 
 	@Bean
 	public DataSource dataSource() throws IOException {
-		Properties properties = new Properties();
-
-		try	(FileInputStream fis = new FileInputStream("src/main/webapp/WEB-INF/application.properties")) {
-			properties.load(fis);
-		}
-
 		HikariConfig config = new HikariConfig();
-		config.setJdbcUrl(properties.getProperty("jdbcUrl"));
-		config.setUsername(properties.getProperty("dataSource.user"));
-		config.setPassword(properties.getProperty("dataSource.password"));
-		config.setMaximumPoolSize(Integer.parseInt(properties.getProperty("maximumPoolSize")));
+		config.setJdbcUrl(PropertiesUtil.getProperty("jdbcUrl"));
+		config.setUsername(PropertiesUtil.getProperty("dataSource.user"));
+		config.setPassword(PropertiesUtil.getProperty("dataSource.password"));
+		config.setMaximumPoolSize(Integer.parseInt(PropertiesUtil.getProperty("maximumPoolSize")));
 
 		return new HikariDataSource(config);
 	}

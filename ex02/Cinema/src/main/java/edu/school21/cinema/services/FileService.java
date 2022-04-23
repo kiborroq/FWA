@@ -5,6 +5,7 @@ import edu.school21.cinema.models.ImageFile;
 import edu.school21.cinema.models.User;
 import edu.school21.cinema.repositories.FileRepository;
 import edu.school21.cinema.repositories.UserRepository;
+import edu.school21.cinema.util.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,15 +35,7 @@ public class FileService {
 	private final static File UPLOAD_DIR;
 
 	static {
-		Properties properties = new Properties();
-
-		try	(FileInputStream fis = new FileInputStream("src/main/webapp/WEB-INF/application.properties")) {
-			properties.load(fis);
-		} catch (IOException e) {
-			throw new FwaRuntimeException(e);
-		}
-
-		UPLOAD_DIR = new File(properties.getProperty("cinema.path.image-upload"));
+		UPLOAD_DIR = new File(PropertiesUtil.getProperty("cinema.path.image-upload"));
 		if (!UPLOAD_DIR.exists()) {
 			UPLOAD_DIR.mkdirs();
 		}

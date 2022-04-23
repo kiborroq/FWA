@@ -1,12 +1,17 @@
 package edu.school21.cinema.util;
 
+import edu.school21.cinema.exception.FwaRuntimeException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class RequestUtil {
+public class Util {
 
 	private static final String[] HEADERS_TO_TRY = {
 			"X-Forwarded-For",
@@ -30,5 +35,13 @@ public class RequestUtil {
 		}
 
 		return request.getRemoteAddr();
+	}
+
+	public static UUID toUuid(String uuid) {
+		try	{
+			return UUID.fromString(uuid);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }
