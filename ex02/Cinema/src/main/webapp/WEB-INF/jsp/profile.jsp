@@ -104,6 +104,10 @@
         color: #5237d5;
     }
 
+    .add-icon:hover {
+        font-size: 60pt;
+    }
+
     .info-key {
         margin-right: 10px;
         min-width: 100px;

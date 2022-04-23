@@ -52,11 +52,17 @@ public class ImagesServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		ImageFile imageFile = null;
 
-		if (req.getPathInfo() != null) {
-			UUID uuid = Util.toUuid(req.getPathInfo().split("/")[0]);
+		System.out.println(req.getPathInfo());
 
-			if (uuid != null) {
-				imageFile = fileService.getFile(uuid);
+		if (req.getPathInfo() != null) {
+			String [] pathParts = req.getPathInfo().split("/");
+
+			if (pathParts.length == 2) {
+
+				UUID uuid = Util.toUuid(pathParts[1]);
+				if (uuid != null) {
+					imageFile = fileService.getFile(uuid);
+				}
 			}
 		}
 

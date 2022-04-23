@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.FileReader;
 import java.io.IOException;
 
-@WebFilter(urlPatterns = "/profile")
+@WebFilter(urlPatterns = {"/profile", "/images"})
 public class AuthenticationFilter implements Filter {
 
 	@Override
